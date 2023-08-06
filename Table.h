@@ -5,11 +5,16 @@
 template<class T>
 class Table
 {
+	
+private:
+	T** elements = nullptr;
+	int rows = 0;
+	int cols = 0;
+	int size = 0;
 public:
-	Table(int r, int c)
+	Table(int r, int c): rows{r},cols{c}
 	{
-		rows = r;
-		cols = c;
+		
 		elements = new T * [rows];
 		for (int i = 0; i < rows; ++i)
 			elements[i] = new T[cols]();
@@ -23,19 +28,82 @@ public:
 		elements = nullptr;
 	}
 
-	const T* operator[](const int row) const
-	{
-		if ((row < 0) || (row >= rows)) throw std::runtime_error("Некорректный индекс обращения к таблице по индексу");
-		return elements[row];
-	}
 
-	T* operator[](const int row)
+	Table(const Table& t)
 	{
-		if ((row < 0) || (row >= rows)) throw std::runtime_error("Некорректный индекс обращения к таблице в операторе присвоения по индексу");
-		return elements[row];
-	}
 
-	Table& operator=(Table t2)
+		this->rows = t.rows;
+		this->cols = t.cols;
+
+
+		elements = new T * [this->rows] {};
+		for (int i = 0; i < this->rows; i++)
+		{
+			elements[i] = new T[this->cols]{};
+		}
+		
+
+		for (size_t i = 0; i < t.rows; i++)
+		{
+			for (size_t j = 0; j < t.cols; j++)
+			{
+				this->elements[i][j] = t.elements[i][j];
+			}
+		}
+		std::cout << std::endl;
+
+		};
+
+
+	T& operator()(int i, int j)
+	{
+		if (i >= rows || i < 0) throw std::out_of_range("out_of_range index i(one)");
+		if (j >= cols || j < 0) throw std::out_of_range("out_of_range index j(one)");
+
+		return elements[i][j];
+	};
+
+
+	
+	int Size() const
+	{
+		return rows * cols;
+	}
+	
+	class ArrayRow
+	{
+	public:
+		ArrayRow(T* r, const int c) : rows(r), cols(c) { }
+
+		T& operator[](int i)
+		{
+			if (i >= cols || i < 0) throw std::out_of_range("out_of_range index j(two)");
+			return rows[i];
+		}
+	private:
+		T* rows;
+		int cols = 0;
+	};
+	ArrayRow operator[](const int i) const
+	{
+		if (i >= rows || i < 0) throw std::out_of_range("out_of_range index i(one)");
+
+		return ArrayRow(elements[i], cols);
+	};
+	void printArr()
+	{
+		for (size_t i = 0; i < rows; i++)
+		{
+			for (size_t j = 0; j < cols; j++)
+			{
+				std::cout << elements[i][j] << '\t';
+			}
+			std::cout << std::endl;
+		}
+		std::cout << std::endl;
+	};
+
+	Table& operator=(const Table t2)
 	{
 		if (this != &t2) 
 		{
@@ -55,25 +123,8 @@ public:
 		return *this;
 	}
 
-	Table(Table& t)
-	{
-		elements = new T * [t.rows];
-		for (int i = 0; i < t.rows; ++i)
-			elements[i] = new T[t.cols]();
-		rows = t.rows;
-		cols = t.cols;
-		for (int i = 0; i < rows; ++i)
-			for (int j = 0; j < cols; ++j)
-				elements[i][j] = t[i][j];
-	}
+	
+	
 
-	int Size() const
-	{
-		return rows * cols;
-	}
 
-private:
-	T** elements = nullptr;
-	int rows = 0;
-	int cols = 0;
 };

@@ -1,100 +1,69 @@
 ﻿#include "Table.h"
 #include <iostream>
 
+
 int main()
 {
-	SetConsoleCP(1251);
-	SetConsoleOutputCP(1251);
+   SetConsoleCP(1251);
+   SetConsoleOutputCP(1251);
 
-	int row = 5;
-	int col = 3;
+    
+    Table <double> T1(8, 8);
 
-	Table<int> newTable(row, col);
 
-	newTable[0][0] = 4;
-	newTable[1][2] = 5;
+    T1.printArr();
 
-	std::cout << newTable[0][0] << std::endl;
-	std::cout << newTable[1][2] << std::endl;
+    
+    T1.Size();
 
-	std::cout << std::endl;
-	std::cout << newTable.Size() << std::endl;
-	std::cout << std::endl;
+    try
+    {
+        T1(0, 0) = 3.3;
+        T1(1, 1) = 7.4;
+        T1(2, 2) = 9.5;
+        T1(5, 4) = 10.6;
+        T1[5][5] = 99;
+        T1[5][6] = 88;
 
-	for (int i = 0; i < row; ++i)
-	{
-		for (int j = 0; j < col; ++j)
-			std::cout << newTable[i][j] << "\t";
-		std::cout << std::endl;
-	}
+        T1.printArr();
 
-	Table<int> nt(newTable);
+     
+        std::cout << T1(1, 1) << "\n";
+        std::cout << T1[5][5] << "\n";
 
-	std::cout << std::endl;
-	for (int i = 0; i < row; ++i)
-	{
-		for (int j = 0; j < col; ++j)
-			std::cout << nt[i][j] << "\t";
-		std::cout << std::endl;
-	}
+    
+        Table<double> t1(2, 3);
+        Table<double> t2(2, 3);
 
-	std::cout << std::endl;
+        
+        t2(0, 0) = 23;
+        t2(1, 2) =.28;
+        t2(1, 1) = 1.2;
 
-	row = 4;
-	col = 2;
+        std::cout << "\nОбъект t1\n";
+        t1.printArr();
 
-	Table<int> newTable2(row, col);
+        std::cout << "\nОбъект t2\n";
+        t2.printArr();
 
-	newTable2[0][1] = 3;
-	newTable2[1][1] = 2;
-	newTable2[3][0] = 10;
+      
+        t1 = t2;
 
-	try
-	{
-		std::cout << "newTable2[8][1] = 4;" << std::endl;
-		newTable2[8][1] = 4;
-	}
-	catch (std::runtime_error& ex)
-	{
-		std::cout << ex.what() << std::endl;
-	}
+        std::cout << "\nОбъект t1\n";
+        t1.printArr();
 
-	std::cout << std::endl;
-	for (int i = 0; i < row; ++i)
-	{
-		for (int j = 0; j < col; ++j)
-			std::cout << newTable2[i][j] << "\t";
-		std::cout << std::endl;
-	}
+        std::cout << "\nОбъект t2\n";
+        t2.printArr();
 
-	nt = newTable2;
+        
+        Table<double> t3(t1);
+        std::cout << "\nОбъект t3\n";
+        t3.printArr();
+    }
+    catch (const std::exception& ex)
+    {
+        std::cout << ex.what() << std::endl;
+    };
 
-	std::cout << std::endl;
-	for (int i = 0; i < row; ++i)
-	{
-		for (int j = 0; j < col; ++j)
-			std::cout << nt[i][j] << "\t";
-		std::cout << std::endl;
-	}
-
-	std::cout << std::endl;
-
-	const Table<int> newTable3(nt);
-
-	std::cout << newTable3[1][1] << std::endl;
-	std::cout << newTable3[3][0] << std::endl;
-
-	std::cout << std::endl;
-
-	try
-	{
-		std::cout << "std::cout << newTable3[10][10] << std::endl;" << std::endl;
-		std::cout << newTable3[10][10] << std::endl;
-	}
-	catch (std::runtime_error& ex)
-	{
-		std::cout << ex.what() << std::endl;
-	}
-
-	return 0;
-}
+    
+};
